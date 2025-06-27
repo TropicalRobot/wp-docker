@@ -1,0 +1,26 @@
+# PHP dependencies if any (optional)
+vendor/
+
+# WordPress uploads (optional)
+wp-content/uploads/
+
+# Optional: ignore plugin/theme code managed by Composer
+wp-content/plugins/*
+!wp-content/plugins/.gitkeep
+
+wp-content/themes/*
+!wp-content/themes/wp-starter-theme
+!wp-content/themes/.gitkeep
+
+# You can also ignore wp-core updates if managed externally
+
+# Ignore certs but keep the folder
+docker/certs/*
+!docker/certs/.gitkeep
+
+# OS or IDE files
+.DS_Store
+.idea/
+.env
+.env.*
+!.env.example

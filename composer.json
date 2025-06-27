@@ -1,0 +1,29 @@
+{
+    "name": "kind-of-giant/wp-docker",
+    "description": "A WordPress project using Composer",
+    "type": "project",
+    "require": {
+        "wpackagist-theme/twentytwentyfive": "*"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://wpackagist.org"
+        }
+    ],
+    "extra": {
+        "installer-paths": {
+            "wp-content/plugins/{$name}/": [
+                "type:wordpress-plugin"
+            ],
+            "wp-content/themes/{$name}/": [
+                "type:wordpress-theme"
+            ]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    }
+}

@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  wordpress:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+      - "8443:443" # HTTPS
+      - "5173:5173" # For Vite development server
+    volumes:
+      - ./:/var/www/html
+      - ./docker/certs:/etc/apache2/ssl
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${DB_NAME}
+      WORDPRESS_DB_USER: ${DB_USER}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      WORDPRESS_WP_ENV: ${WP_ENV}
+
+  db:
+    image: mysql:8.0
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - db:/var/lib/mysql
+    
+  composer:
+    image: composer:latest
+    volumes:
+      - ./:/var/www/html
+    working_dir: /var/www/html
+
+volumes:
+  db:

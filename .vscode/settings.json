@@ -11,7 +11,7 @@
       "prettier.documentSelectors": [
     "**/*.{js,jsx,ts,tsx,vue,html,css,scss,less,json,md,mdx,graphql,yaml,yml,php}"
   ],
-    "prettier.prettierPath": "./wp-content/themes/beyonddharma/node_modules/prettier",
+    "prettier.prettierPath": "./wp-content/themes/classic-theme/node_modules/prettier",
     "[scss]": {
         "editor.defaultFormatter": "vscode.css-language-features",
         "editor.tabSize": 4,

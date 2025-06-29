@@ -3,6 +3,7 @@
     "description": "A WordPress project using Composer",
     "type": "project",
     "require": {
+        "wpackagist-plugin/wordpress-seo": "*",
         "wpackagist-theme/twentytwentyfive": "*"
     },
     "repositories": [

@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+# INSTRUCTIONS: MAKE THIS FILE EXECUTABLE TO USE: chmod +x ./dev.sh
+
+### Set environment variables for dev or CLI
+## THE PARAMETERS IN HERE WILL BE USED IN THE docker-compose.yml
+##  They override the ones defined in the .env file for docker-compose.yml
+##  Note: Parameter explicitly set in docker-compose.yml have the highest priority
+
+# Specific to Ubuntu
+#export XDEBUG_HOST=$(hostname -I)
+
+# Specific to Mac. For some machines it may be en1 instead of en0
+# export XDEBUG_HOST=$(ipconfig getifaddr en0)
+
+# THE FOLLOWING WILL OVERRIDE THE DOCKER COMPOSE ENVIRONMENT PARAMETERS DEFINED IN THE docker-compose .env
+# export APP_ENV=${APP_ENV:-local}
+# export APP_PORT=${APP_PORT:-8099}
+# export REDIS_PORT=${REDIS_PORT:-6396}
+
+# Do NOT pass a pseudo-tty so it does not becaome interactive
+# PHPUnit will throw an error if it is run with tty (interactive)
+# Disable pseudo-TTY allocation for CI (Jenkins)
+TTY=""
+
+# If $BUILD_NUMBER is defined
+if [ ! -z "$BUILD_NUMBER" ]; then
+    # Run as NPN-interactive
+    TTY="-T"
+fi
+
+COMPOSE="docker-compose"
+APP_HOME="/var/www/html"
+HOST_IP=$(cat .env | grep HOST_IP= | cut -d '=' -f2)
+XDEBUG_PORT=$(cat .env | grep XDEBUG_PORT= | cut -d '=' -f2)
+
+WP_PUBLIC_DIRECTORY=$(cat .env | grep WP_PUBLIC_DIRECTORY= | cut -d '=' -f2)
+WP_THEME_ROOT=$(cat .env | grep WP_THEME_ROOT= | cut -d '=' -f2)
+
+## DEFINE CASES FOR COMMAND PARAMETERS:
+
+if [ $# -gt 0 ]; then
+
+    if [ "$1" == "build" ]; then
+        $COMPOSE up -d --build $TTY
+
+    elif [ "$1" == "start" ]; then
+        $COMPOSE up -d $TTY
+
+    elif [ "$1" == "stop" ]; then
+        $COMPOSE down $TTY
+   
+    # If "composer" is used, pass-through "composer" inside the container
+    elif [ "$1" == "composer" ]; then
+        shift 1
+        $COMPOSE exec wordpress bash -c "composer $@"
+
+    elif [ "$1" == "theme:install" ]; then
+        shift 1
+        $COMPOSE exec wordpress bash -c "cd wp-content/themes/classic-theme && npm install"
+
+    elif [ "$1" == "theme:build" ]; then
+        shift 1
+        $COMPOSE exec wordpress bash -c "cd wp-content/themes/classic-theme && npm run build"
+
+    elif [ "$1" == "theme:dev" ]; then
+        shift 1
+        $COMPOSE exec wordpress bash -c "cd wp-content/themes/classic-theme && npm run dev"
+    
+    elif [ "$1" == "wp:build" ]; then
+        shift 1
+        $COMPOSE exec wordpress bash -c "cd wp-content/themes/classic-theme && npm run wp:build"
+
+    # Else, pass-through args to docker-compose
+    else
+        $COMPOSE "$@"
+    fi
+else
+    $COMPOSE ps
+fi

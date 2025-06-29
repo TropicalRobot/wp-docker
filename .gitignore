@@ -1,6 +1,16 @@
 # PHP dependencies if any (optional)
 vendor/
 
+# WordPress Core files
+/wp-content/
+/wp-includes/
+/wp-admin/
+/index.php
+/license.txt
+/xmlrpc.php
+/wp-*
+
+
 # WordPress uploads (optional)
 wp-content/uploads/
 
@@ -9,7 +19,8 @@ wp-content/plugins/*
 !wp-content/plugins/.gitkeep
 
 wp-content/themes/*
-!wp-content/themes/wp-starter-theme
+!wp-content/themes/block-theme
+!wp-content/themes/classic-theme
 !wp-content/themes/.gitkeep
 
 # You can also ignore wp-core updates if managed externally
